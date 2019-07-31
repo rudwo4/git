@@ -2,6 +2,8 @@ package java_git;
 
 public class Btest {
 	public static void main(String[] args) {
-		System.out.println("³Ê´Â º°À» º¸ÀÚ¸ç ³» ¼ÕÀ» Àâ¾Ò¾î");
+		System.out.println("ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ò¾ï¿½");
+		System.out.println("í…ŒìŠ¤íŠ¸í•©ë‹ˆë‹¹ í…ŒìŠ¤íŠ¸");
+		System.out.println("2343243242");
 	}
 }
