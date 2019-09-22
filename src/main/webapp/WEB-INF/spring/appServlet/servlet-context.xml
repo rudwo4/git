@@ -13,6 +13,7 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
+<<<<<<< HEAD
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -28,4 +29,64 @@
 	<!-- @Secured 어노테이션 활성화, 사용권한 제한 -->
 	<!-- Namespaces 탭에서 먼저 security 체크 후 작성, 단 버전은 spring-security.xsd로 수정-->
 	<security:global-method-security secured-annotations="enabled" />
+=======
+	
+	<!-- 정적 리소스 파일 -->
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	
+	<!-- 시큐리티 추가 1. 정적 리소스 파일 -->
+	<resources mapping="/common/**" location="/WEB-INF/views/Project_JSP/common/" />	<!-- 시큐리티 적용없이 자유롭게 사용 -->
+	<!-- 시큐리티 추가 1 -->
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- 시큐리티 추가 2 -->
+	<!-- @Secured 어노테이션 활성화, 사용권한 제한 -->
+	<!-- Namespaces 탭에서 먼저 security 체크 후 작성, 단 버전은 spring-security.xsd로 수정 -->	
+	<security:global-method-security secured-annotations="enabled"/>
+	<!-- 시큐리티 추가 2 -->
+	<context:component-scan base-package="spring.project.Mybatis" />
+	
+	<!-- Mybatis 설정 시작 -->
+	<beans:bean name = "dataSource" class ="org.springframework.jndi.JndiObjectFactoryBean">
+		<beans:property name="jndiName" value = "java:comp/env/jdbc/Oracle11g" />
+		<beans:property name="resourceRef" value = "true" />
+	</beans:bean>
+	
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref = "dataSource"></beans:property>
+		<beans:property name="mapperLocations" value = "classpath:spring_project_Mybatis/mapper/*.xml" />
+	</beans:bean>
+	
+	<beans:bean id ="sqlSession" class = "org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg ref ="sqlSessionFactory"/>
+	</beans:bean>
+	<!-- Mybatis 설정 종료 -->
+	
+	<!-- mail bean -->
+	<beans:bean id ="javaMailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+		<beans:property name="host" value ="smtp.gmail.com" />
+		<beans:property name="port" value ="587" />
+		<beans:property name="username" value ="rudwo4@gmail.com" />
+		<beans:property name="password" value ="rlaaltjs1" />
+		<beans:property name="javaMailProperties">
+			<beans:props>
+				<beans:prop key="mail.smtp.ssl.trust">smtp.gmail.com</beans:prop>
+				<beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+				<beans:prop key="mail.smtp.auth">true</beans:prop>
+			</beans:props>	
+		</beans:property>
+	</beans:bean>
+	
+	<!-- MultipartResolver 설정-->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="100000000" />
+		<beans:property name="maxInMemorySize" value ="100000000" />
+	</beans:bean>
+	
+>>>>>>> branch 'master' of https://github.com/rudwo4/git.git
 </beans:beans>

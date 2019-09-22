@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>begin_stock_ver05</name>
+=======
+	<name>spring_project_Mybatis</name>
+>>>>>>> branch 'master' of https://github.com/rudwo4/git.git
 	<comment></comment>
 	<projects>
 	</projects>

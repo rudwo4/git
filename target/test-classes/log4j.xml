@@ -11,7 +11,11 @@
 	</appender>
 	
 	<!-- Application Loggers -->
+<<<<<<< HEAD
 	<logger name="com.spring.stock">
+=======
+	<logger name="spring.project.Mybatis">
+>>>>>>> branch 'master' of https://github.com/rudwo4/git.git
 		<level value="info" />
 	</logger>
 	

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
+<<<<<<< HEAD
 	<pluginVersion><![CDATA[3.9.10.201907102328-CI-B2290]]></pluginVersion>
+=======
+	<pluginVersion><![CDATA[3.9.9.201906180643-RELEASE]]></pluginVersion>
+>>>>>>> branch 'master' of https://github.com/rudwo4/git.git
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
