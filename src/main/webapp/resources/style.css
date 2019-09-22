@@ -1,0 +1,125 @@
+	header {
+		width: 100%;
+		position: fixed ;
+		top:0px;
+		z-index: 99;
+		background: white;
+	}
+	
+	nav ul li {
+		display: inline-block;
+	}
+	
+	a {	
+		color : black;
+		text-decoration: none;
+	}
+	
+	#menu {
+		margin-right: 20px;
+		float: right;
+		list-style-type: none;
+		font-color : black;
+	}
+	
+	#logo{
+		text-align : center;
+		margin-left : 300px;
+	}
+	
+	footer {
+		width: 1000px;
+		height: 210px;
+		margin: 20px auto 0;
+		overflow: hidden;
+	}
+	
+	footer div {
+		float: left;
+		height: 250px;
+		border: 1px solid #cccccc;
+		box-sizing: border-box;
+	}
+	
+	footer div:first-child {
+		width: 200px;
+		height : 120px;
+	}
+	
+	footer div:nth-child(2) {
+		width: 800px;
+		height : 120px;
+	}
+	.office_logo img {
+		width : 190px;
+		margin-top : 30px;
+		margin-left : 5px;
+	}
+	
+	footer div:last-child {
+		width: 1000px;
+		height: 50px;
+		margin: 10px auto 0;
+		background-color: #242424;
+		color: white;
+		text-align: center;
+		line-height: 50px;
+		clear: both;
+		border: 0;
+	}
+	
+	#button input {
+	   width : 250px;
+	   height : 50px;
+	   position: relative;
+       vertical-align: top;
+       padding: 0;
+       font-size: 15px;
+       color: white;
+       text-align: center;
+       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+       background: black;
+       border: 0;
+       border-bottom: 2px solid #f7e3e3;
+       border-radius: 5px;
+       cursor: pointer;
+       -webkit-box-shadow: inset 0 -2px 			#f7e3e3;
+       box-shadow: inset 0 -2px #f7e3e3;
+    	background : #f7e3e3;
+        color : gray;
+        
+	}
+	
+	 #block {
+    	width : 200px;
+    	hieght : 40px;
+    	font-size : 30px;
+    }
+   	
+   	#loogo input{
+   		width : 200px;
+   		hieght : 50px;
+   	}
+   	
+   	 #key{
+    	width :400px;
+        height : 50px;
+    }
+    
+    #keyBtn{
+    	width : 70px;
+	   height : 50px;
+       font-size: 15px;
+       color: gray;
+       text-align: center;
+       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+       background: black;
+       border: 0;
+       border-bottom: 2px solid #f7e3e3;
+       border-radius: 5px;
+       cursor: pointer;
+       -webkit-box-shadow: inset 0 -2px #f7e3e3;
+       box-shadow: inset 0 -2px #f7e3e3;
+    	background : #f7e3e3;
+        color : gray;
+    }

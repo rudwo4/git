@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring/root-context.xml
+    			classpath:/security-context.xml	<!-- 시큐리티 설정 파일 추가 -->
+    			classpath:/security-datasource.xml	<!-- 시큐리티 설정 파일 추가 -->
+    </param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>appServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>appServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!-- 시큐리티 추가 -->
+  <!-- 스프링 시큐리티에서 사용하는 세션 이벤트 처리 관련 리스너로서, 세션 만료 체크, 동시 로그인 제한등의 기능 -->
+  <listener>
+  	<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+  </listener>
+  <!-- 한글 안깨지게 처리 시작  -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter> 	
+	
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 한글 안깨지게 처리 종료  -->
+  <!-- 시큐리티 추가 시작 -->
+  <!-- 보안 필터 체인 : 보안과 관련된 작업 처리
+  		- 로그인 폼을 보여주거나, 접근 권한 업을 시 403 에러 응답
+  		- DelegatingFilterProxy -> FilterChainProxy -> SecurityFilterChain -> 실제 자원 -->
+  <filter>
+  	<filter-name>springSecurityFilterChain</filter-name>
+  	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+ 	 <filter-name>springSecurityFilterChain</filter-name>
+ 	 <url-pattern>/*</url-pattern>
+  </filter-mapping>		
+  
+  <!-- 에러 처리 페이지 -->
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/Project_JSP/guest/login</location>
+  </error-page>
+  
+  <!-- 세션 타임아웃 설정(20분) -->
+  <session-config>
+  	<session-timeout>20</session-timeout>
+  </session-config>
+</web-app>

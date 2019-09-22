@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="spring.project.Mybatis.persistence.guestDAO">
+
+	<select id="selectUser" resultType="java.util.Map">
+		SELECT userid as username, passwd as password, name, enabled, authority
+		  FROM users
+		 WHERE userid =#{userid} 
+	</select>
+	
+	<select id ="confirmId" resultType="int">
+		SELECT count(*) FROM GUEST WHERE ID = #{strId}
+	</select>
+	
+	<insert id="guestAgreePro" parameterType = "spring.project.Mybatis.vo.guestVO">
+		INSERT INTO users(userid,passwd,num,name,email,phone,birth,gender)
+		VALUES(#{id},#{pwd},GUEST_SEQ.NEXTVAL,#{name},#{email},#{phone},#{birth},#{gender})
+	</insert>
+	
+	<select id="loginPro" parameterType="java.util.Map" resultType="int">
+		SELECT count(*) FROM GUEST WHERE ID =#{strId} AND PW =#{strPw}
+	</select>
+	
+	<select id="modifyView" resultType="spring.project.Mybatis.vo.guestVO">
+		SELECT * FROM GUEST WHERE ID = #{strId}
+	</select>
+	
+	<select id="currentOrder" resultType="int">
+		SELECT COUNT(*) FROM GUESTORDER WHERE ID = #{strId} AND O_STATUS = 'N'
+	</select>
+	
+	<update id="modifyPro" parameterType = "spring.project.Mybatis.vo.guestVO">
+		UPDATE GUEST SET pw = #{pwd}, email = #{email}, phone = #{phone} WHERE ID = #{id}
+	</update>
+	
+	<select id="QnAmyPage" parameterType="spring.project.Mybatis.vo.faqVO">
+		SELECT * FROM QNA_BORDER WHERE Q_HOSTID = ${strId}
+	</select>
+	
+	<delete id="deletePro">
+		DELETE GUEST WHERE ID = #{strId}
+	</delete>
+	
+	<select id="getArticleCnt" resultType = "int">
+		SELECT COUNT(*) AS cnt FROM NOTICE_BORDER
+	</select>
+	
+	<select id="getArticleList" parameterType="java.util.Map" resultType="spring.project.Mybatis.vo.faqVO">
+		<![CDATA[
+		SELECT * FROM (SELECT N_NUM num,N_HOSTID hostId,N_HOSTPWD hostPwd,N_KIND kind,
+									N_SUBJECT subject,N_CONTENT content,N_DATE reg_date, ROWNUM rNum 
+					   FROM(SELECT * FROM NOTICE_BORDER 
+					   		ORDER BY N_NUM DESC)
+					   )
+		WHERE rNum >= #{start} AND rNum <=#{end}
+		]]>
+	</select>
+	
+	<select id="notice_content" resultType = "spring.project.Mybatis.vo.faqVO" parameterType="int">
+		SELECT N_KIND kind,
+			   N_HOSTID hostId,
+			   N_DATE reg_date,
+			   N_SUBJECT subject,
+			   N_CONTENT content 
+	      FROM NOTICE_BORDER WHERE N_NUM = #{num}
+	</select>
+	
+	<insert id="noticeWritePro" parameterType="spring.project.Mybatis.vo.faqVO">
+		INSERT INTO NOTICE_BORDER(N_NUM,N_HOSTID,N_HOSTPWD,N_KIND,N_SUBJECT,N_CONTENT,N_DATE) 
+		VALUES(NUM_SEQ.NEXTVAL,#{hostId},#{hostPwd},#{kind},#{subject},#{content},#{reg_date})
+	</insert>
+	
+	<insert id="QnAsend" parameterType ="spring.project.Mybatis.vo.QnAVO">
+		INSERT INTO QNA_BORDER(Q_NUM,Q_HOSTID,Q_KIND,Q_SUBJECT,Q_CONTENT)
+		VALUES(QNA_SEQ.NEXTVAL,#{strId},#{kind},#{subject},#{content})
+	</insert>
+	
+	<select id="getQnA" resultType ="int">
+		SELECT COUNT(*) FROM QNA_BORDER WHERE Q_HOSTID = #{strId}
+	</select>
+	
+	<select id="MangetQnA" resultType ="int">
+		SELECT COUNT(*) FROM QNA_BORDER
+	</select>
+	
+	<select id="getQnAList" resultType = "spring.project.Mybatis.vo.QnAVO" parameterType = "java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT Q_NUM num,Q_HOSTID strId,Q_KIND kind,Q_SUBJECT subject,
+							  Q_CONTENT content,Q_DATE reg_date,A_CONTENT a_content,ROWNUM rNum 
+					   FROM(
+					   		SELECT * FROM QNA_BORDER 
+				   			ORDER BY Q_NUM DESC
+				   			)
+				   	   )
+		WHERE rNum >= #{start} AND rNum <=#{end}
+		]]>		   
+	</select>
+	
+	<select id="HostloginPro" resultType="int" parameterType="java.util.Map">
+		SELECT count(*) FROM HOST WHERE HOSTID =#{strId} AND HOSTPW =#{strPw} 
+	</select>
+	
+	<insert id="emailKey" parameterType ="java.util.Map">
+		INSERT INTO EAMILKEY VALUES(#{toEmail},#{key})
+	</insert>
+	
+	<select id ="chkKey" parameterType ="java.util.Map" resultType ="int">
+		SELECT count(*) FROM EAMILKEY WHERE EMAIL=#{userEmail} AND KEY=#{emailChk}
+	</select>
+	
+	<select id="modifyPwdChk" parameterType ="java.util.Map" resultType ="int">
+		SELECT count(*) FROM NOTICE_BORDER WHERE N_NUM =#{num} AND N_HOSTPWD =#{pwd}
+	</select>
+	
+	<delete id="deleteNoticePro" parameterType="int">
+		DELETE NOTICE_BORDER WHERE N_NUM =#{num}
+	</delete>
+	
+	<update id="QnaSend" parameterType="spring.project.Mybatis.vo.QnAVO">
+		UPDATE QNA_BORDER SET A_CONTENT = #{a_content} WHERE Q_NUM = #{num}
+	</update>
+	
+	<update id="modifyInsert" parameterType ="spring.project.Mybatis.vo.faqVO">
+		UPDATE NOTICE_BORDER 
+		SET N_HOSTID =#{hostId} , N_HOSTPWD =#{hostPw} , N_KIND = #{kind} , N_SUBJECT = #{subject} , N_CONTENT = #{content} 
+		WHERE N_NUM = #{num}
+	</update>
+	
+	<select id="QnaContent" resultType = "spring.project.Mybatis.vo.QnAVO" parameterType = "int">
+		SELECT Q_KIND kind,Q_HOSTID strId,Q_DATE reg_date,Q_SUBJECT subject,Q_CONTENT content,A_CONTENT a_content
+		  FROM QNA_BORDER WHERE Q_NUM = #{num}
+	</select>
+	
+	<select id="guestQnAList" resultType = "spring.project.Mybatis.vo.QnAVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT Q_NUM num,Q_HOSTID strId,Q_KIND kind,Q_SUBJECT subject,Q_CONTENT content,Q_DATE reg_date,A_CONTENT a_content, ROWNUM rNum 
+						 FROM(SELECT * FROM QNA_BORDER 
+						 	  ORDER BY Q_NUM DESC)
+					   )
+		WHERE rNum >= #{start} AND rNum <=#{end} AND strId = #{Id}
+		]]>
+	</select>
+	<select id="custInfo"  resultType = "spring.project.Mybatis.vo.guestVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT ID id,PW pwd,NAME name,EMAIL email,PHONE phone,BIRTH birth,GENDER gender,REG_DATE reg_date,NUM num, ROWNUM rNum
+			  			FROM(SELECT * FROM GUEST 
+			  				  ORDER BY NUM DESC))
+		WHERE rNum>=#{start} AND rNum<=#{end} 	
+		]]>
+	</select>
+	
+	<select id="custInfoCnt" resultType="int">
+		SELECT COUNT(*) AS cnt FROM GUEST
+	</select>
+	
+	<select id="proInfo" resultType = "spring.project.Mybatis.vo.productVO" parameterType="java.util.Map">
+	<![CDATA[
+		SELECT * FROM (SELECT P_NUM num,P_CODE p_code,P_IMAGE p_image,P_NAME p_name,P_SIZE p_size,P_COLOR p_color,
+							  P_COUNT p_count,P_ORDERCOUNT p_orderCount,P_KIND p_kind,P_SALEPRICE p_salePrice,P_PURCHASECOST p_purchaseCost, ROWNUM rNum
+					   	FROM(SELECT * FROM PRODUCT 
+					    	 ORDER BY P_NUM DESC)) 
+		WHERE rNum>=#{start} AND rNum<=#{end} 
+	]]>	
+	</select>
+	
+	<select id="productInfo" resultType ="int">
+		SELECT COUNT(*) AS cnt FROM PRODUCT
+	</select>
+	
+	<insert id="uploadpd" parameterType ="spring.project.Mybatis.vo.productVO">
+		INSERT INTO PRODUCT(P_NUM,P_CODE,P_IMAGE,P_NAME,P_SIZE,P_COLOR,P_COUNT,P_KIND,P_SALEPRICE,P_PURCHASECOST,P_IMAGE1,P_IMAGE2,P_IMAGE3)
+		VALUES(PRO_SEQ.NEXTVAL,'p'||PRO_SEQ.NEXTVAL,#{p_image},#{p_name},#{p_size},#{p_color},#{p_count},#{p_kind},#{p_salePrice},#{p_purchaseCost},#{p_image1},#{p_image2},#{p_image3})
+	</insert>
+	
+	<select id="productView" resultType ="spring.project.Mybatis.vo.productVO">
+		SELECT  p_NUM num, P_CODE p_code, P_IMAGE p_image, P_NAME p_name, P_SIZE p_size,
+    			P_COLOR p_color,P_COUNT p_count,P_ORDERCOUNT p_orderCount,P_KIND p_kind,P_SALEPRICE p_salePrice,P_PURCHASECOST p_purchaseCost,
+    			P_IMAGE1 p_image1,P_IMAGE2 p_image2,P_IMAGE3 p_image3 
+    	FROM PRODUCT WHERE P_NUM = #{num}
+	</select>
+	
+	<insert id="cartInsert" parameterType ="spring.project.Mybatis.vo.productVO">
+		INSERT INTO CART(NUM,ID,P_IMAGE,P_CODE,P_NAME,P_SIZE,P_COUNT,P_PRICE,P_SUM,P_KIND,P_COLOR)
+		VALUES(CART_SEQ.NEXTVAL,#{id},#{p_image},#{p_code},#{p_name},#{p_size},#{p_count},#{p_salePrice},#{sum},#{p_kind},#{p_color})
+	</insert>
+	
+	<select id="cartInfoCnt" resultType="int">
+		SELECT COUNT(*) AS cnt FROM CART WHERE ID= #{strId}
+	</select>
+	
+	<select id="cartInfo" resultType="spring.project.Mybatis.vo.productVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT NUM,ID,P_IMAGE,P_CODE,P_NAME,P_SIZE,P_COUNT,P_PRICE p_salePrice,P_SUM sum,P_KIND,P_COLOR, ROWNUM rNum
+					  FROM(SELECT * FROM CART 
+					  ORDER BY P_CODE DESC))
+		WHERE rNum>=#{start} AND rNum<=#{end}
+		]]>
+	</select>
+	
+	<delete id="deleteCart">
+		DELETE CART WHERE NUM =#{num}
+	</delete>
+	
+	<select id="orderProductView" resultType ="spring.project.Mybatis.vo.productVO">
+		SELECT * FROM PRODUCT WHERE P_CODE = #{p_code}
+	</select>
+	
+	<select id="priCartOrd" resultType="spring.project.Mybatis.vo.productVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT NUM,ID,P_IMAGE,P_CODE,P_NAME,P_SIZE,P_COUNT,P_PRICE p_salePrice,P_SUM sum, ROWNUM rNum
+					  FROM(SELECT * FROM CART 
+					  ORDER BY P_CODE DESC))
+		WHERE rNum>=#{start} AND rNum<=#{end} AND NUM = #{num}
+	]]>
+	</select>
+	
+	<insert id="insertOrder" parameterType="spring.project.Mybatis.vo.orderVO">
+		INSERT INTO GUESTORDER (O_NUMBER,ID,P_CODE,P_NAME,P_SIZE,P_COLOR,P_COUNT,P_PRICE,P_KIND,O_ADDRESS)
+		VALUES(ORD_SEQ.NEXTVAL,#{id},#{p_code},#{p_name},#{p_size},#{p_color},#{p_count},#{p_price},#{p_kind},#{o_address}) 
+	</insert>
+	
+	<select id="hostOrderChk" resultType="int">
+		SELECT COUNT(*) AS cnt FROM GUESTORDER
+	</select>
+	
+	<select id="orderInfo" resultType ="spring.project.Mybatis.vo.orderVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT O_NUMBER,ID,P_CODE,P_NAME,P_SIZE,P_COLOR,P_COUNT,P_PRICE,P_KIND,O_ADDRESS,O_STATUS,ROWNUM rNum
+					   FROM(SELECT * FROM GUESTORDER
+					   ORDER BY O_NUMBER DESC)
+					   )
+		WHERE rNum >= #{start} AND rNum <=#{end}
+		]]>
+	</select>
+	
+	<update id="orderSaleChk">
+		UPDATE guestorder SET O_STATUS = 'Y' WHERE O_NUMBER = #{num}
+	</update>
+	
+	<select id="totalSale" resultType="int">
+		SELECT SUM(P_PRICE) FROM GUESTORDER
+	</select>
+	
+	<select id="FirstChat" resultType="spring.project.Mybatis.vo.productVO">
+		SELECT NVL(P_KIND,'total') p_kind,
+		  	   SUM(P_COUNT) as p_count
+		  FROM GUESTORDER
+		  GROUP BY P_KIND
+	</select>
+	
+	<select id="SecondChat" resultType="spring.project.Mybatis.vo.guestVO">
+		SELECT NVL(G.GENDER,'total') gender,
+				SUM(O.P_COUNT) p_count
+		  FROM GUEST G JOIN GUESTORDER O 
+			ON G.ID = O.ID 
+	  GROUP BY G.GENDER
+	</select>
+	
+	<select id="guestMyOrderCnt" resultType="int">
+		SELECT COUNT(*) as cnt FROM GUESTORDER WHERE ID = #{strId}
+	</select>
+	
+	<select id="guestMyOrder" resultType="spring.project.Mybatis.vo.orderVO" parameterType="java.util.Map">
+	<![CDATA[
+		SELECT * FROM (SELECT O_NUMBER,ID,P_CODE,P_NAME,P_SIZE,P_COLOR,P_COUNT,P_PRICE,P_KIND,O_ADDRESS,O_STATUS,ROWNUM rNum
+					   FROM(SELECT * FROM GUESTORDER 
+					   ORDER BY O_NUMBER DESC)
+					   )
+		WHERE rNum >= #{start} AND rNum <=#{end} AND ID = #{Id}
+	]]>
+	</select>
+	
+	<select id="hostOrdPro" resultType="spring.project.Mybatis.vo.productVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT P_CODE,P_SIZE,P_COUNT,P_ORDERCOUNT,ROWNUM rNum
+					   FROM(SELECT * FROM PRO_DET ORDER BY P_CODE DESC))
+		WHERE rNum >= #{start} AND rNum <=#{end} AND P_CODE = #{code}
+		]]>			
+	</select>
+	
+	<select id="hostOrdCnt" resultType="int">
+		SELECT COUNT(*) AS cnt FROM PRO_DET
+	</select>
+	
+	<insert id="addCountSize" parameterType="java.util.Map">
+		INSERT INTO PRO_DET(P_CODE,P_SIZE,P_COUNT)
+		VALUES(#{ordCode},#{ordSize},#{ordCount})
+	</insert>
+	
+	<update id="SCorderPro" parameterType="java.util.Map">
+		UPDATE PRO_DET SET P_COUNT = #{productCount} WHERE P_CODE = #{p_code}
+	</update>
+	
+	<select id="getNameEmailChk" resultType="spring.project.Mybatis.vo.guestVO" parameterType="java.util.Map">
+		SELECT id, pw FROM GUEST WHERE NAME=#{userName} AND EMAIL=#{userEmail} AND BIRTH=#{userBirth}
+	</select>
+	
+	<select id="NameEmailChk" resultType="int" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM GUEST WHERE NAME=#{userName} AND EMAIL=#{userEmail} AND BIRTH=#{userBirth}
+	</select>
+	
+	<select id="getPwEmailChk" resultType="spring.project.Mybatis.vo.guestVO" parameterType="java.util.Map">
+		SELECT id, pw as pwd FROM GUEST WHERE NAME=#{userName} AND EMAIL=#{userEmail} AND id=#{userId}
+	</select>
+	
+	<select id="PwEmailChk" resultType="int" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM GUEST WHERE NAME=#{userName} AND EMAIL=#{userEmail} AND id=#{userId}
+	</select>
+	
+	<select id="keywordCnt" resultType="int">
+		SELECT COUNT(*) FROM PRODUCT WHERE P_NAME LIKE '%'||#{keyword}||'%'
+	</select>
+	
+	<select id="keyword" resultType="spring.project.Mybatis.vo.productVO" parameterType="java.util.Map">
+		<![CDATA[
+		SELECT * FROM (SELECT P_NUM num,P_CODE p_code,P_IMAGE p_image,P_NAME p_name,P_SIZE p_size,P_COLOR p_color,
+							  P_COUNT p_count,P_ORDERCOUNT p_orderCount,P_KIND p_kind,P_SALEPRICE p_salePrice,P_PURCHASECOST p_purchaseCost, ROWNUM rNum
+					   	FROM(SELECT * FROM PRODUCT 
+					    	 ORDER BY P_NUM DESC)) 
+		WHERE P_NAME LIKE '%'||#{keyword}||'%'
+	]]>	
+	</select>
+	
+	<delete id="ordCartDel">
+		DELETE CART WHERE ID =#{strId} AND P_CODE=#{p_code}
+	</delete>
+	
+	<update id="orderNum">
+		UPDATE GUESTORDER SET O_STATUS = 'C' WHERE O_NUMBER = #{orderNum}
+	</update>
+</mapper>    
